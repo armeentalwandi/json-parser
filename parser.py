@@ -6,30 +6,45 @@ class Parser:
   def __init__ (self, tokens):
     self.tokens = tokens
     self.braces_stack = []
-    self.previous_token = None
+    self.currpos = 0
+    self.length = len(tokens)
   
-  def parse(self):
-    for idx, token in enumerate(self.tokens):
+  def peek_token(self) -> Token:
+    if self.currpos + 1 < self.length:
+      return self.tokens[self.currpos + 1]
+    return None
+  
+  def parse_object(self) -> bool:
+    self.currpos += 1
+    while self.currpos < self.length:
+      token = self.tokens[self.currpos]
+      if token.type == TokenType.R_BRACE:
+        return True
+      if token.type != TokenType.STRING:
+        return False
+      
 
-      if idx == 0 and token.type != TokenType.L_BRACE:
-        print("Invalid JSON: Must start with an opening brace")
-        sys.exit(1)
-      if idx == len(self.tokens) - 1 and token.type != TokenType.R_BRACE:
-        print("Invalid JSON: Must end with a closing brace")
-        sys.exit(1)
+  def parse(self) -> None:
+    while self.currpos < self.length:
+      token = self.tokens[self.currpos]
 
       if token.type == TokenType.L_BRACE:
         self.braces_stack.append(token)
+        isValidObject = self.parse_object()
+        if not isValidObject:
+          print("Invalid JSON: Invalid object structure")
+          sys.exit(1)
+
       elif token.type == TokenType.R_BRACE:
         if len(self.braces_stack) == 0:
           print("Invalid JSON: Unmatched closing brace")
           sys.exit(1)
         self.braces_stack.pop()
-    
+      self.currpos += 1
+
     if len(self.braces_stack) > 0:
-      print("Invalid JSON: Unmatched opening brace(s)")
+      print("Invalid JSON: Unmatched opening brace")
       sys.exit(1)
-    print("JSON is valid")
-    sys.exit(0)
+    
 
 

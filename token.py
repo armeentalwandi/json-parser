@@ -9,6 +9,8 @@ class TokenType(Enum):
   NULL = 6
   COMMA = 7
   COLON = 8
+  L_BRACKET = 9
+  R_BRACKET = 10
 
 class Token:
   def __init__(self, type: TokenType, value: str):
