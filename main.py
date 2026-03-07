@@ -21,6 +21,7 @@ def main():
     sys.exit(1)
   lexer = Lexer(text)
   tokens = lexer.tokenize()
+ # print(f"Tokens: {[ (t.type.name, t.value) for t in tokens ]}")
 
   parser = Parser(tokens)
   parser.parse()
