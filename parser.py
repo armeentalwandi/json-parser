@@ -8,6 +8,15 @@ class Parser:
     self.braces_stack = []
     self.currpos = 0
     self.length = len(tokens)
+
+  
+  def expect_token(self, expected_type):
+    if self.currpos >= self.length or self.tokens[self.currpos].type != expected_type:
+        print(f"Invalid JSON: Expected {expected_type}")
+        sys.exit(1)
+    token = self.tokens[self.currpos]
+    self.currpos += 1
+    return token
   
   def peek_token(self) -> Token:
     if self.currpos + 1 < self.length:
@@ -16,13 +25,8 @@ class Parser:
   
   def parse_object(self) -> bool:
     self.currpos += 1
-    while self.currpos < self.length:
-      token = self.tokens[self.currpos]
-      if token.type == TokenType.R_BRACE:
-        return True
-      if token.type != TokenType.STRING:
-        return False
-      
+    while True:
+      pass
 
   def parse(self) -> None:
     while self.currpos < self.length:
